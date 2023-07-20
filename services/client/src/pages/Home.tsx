@@ -1,5 +1,3 @@
-import { TransactionList } from "@/components/TransactionList";
-import TransactionManager from "@/components/TransactionManager";
 import { NavLink, Outlet } from "react-router-dom";
 
 export function HomePage() {

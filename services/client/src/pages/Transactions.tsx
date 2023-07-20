@@ -1,6 +1,6 @@
-import { TransactionList } from "@/components/TransactionList";
 import { EditTransaction } from "@/components/TransactionManager/EditTransaction";
 import { NewTransaction } from "@/components/TransactionManager/NewTransaction";
+import { TransactionList } from "@/components/TransactionManager/TransactionList";
 import { useAppSelector } from "@/state/hooks";
 
 export function TransactionsPage() {
