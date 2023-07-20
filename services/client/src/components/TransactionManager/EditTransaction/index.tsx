@@ -4,7 +4,7 @@ import { add, setEditing, update } from "@/state/slices/transactions";
 import { ITransaction } from "@/types";
 
 export function EditTransaction() {
-  const categories = useAppSelector((state) => state.categories);
+  const categories = useAppSelector((state) => state.categories.categories);
   const currentTransaction = useAppSelector(
     (state) => state.transactions.editing as ITransaction
   );

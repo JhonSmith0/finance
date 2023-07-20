@@ -3,7 +3,7 @@ import { useAppSelector } from "@/state/hooks";
 
 export function NewTransaction() {
   const { register, handleSubmit } = useNewTransaction();
-  const categories = useAppSelector((state) => state.categories);
+  const categories = useAppSelector((state) => state.categories.categories);
 
   return (
     <form onSubmit={handleSubmit}>
