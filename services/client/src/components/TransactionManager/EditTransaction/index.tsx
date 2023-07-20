@@ -27,7 +27,7 @@ export function EditTransaction() {
       </fieldset>
       <fieldset>
         <label>Categoria</label>
-        <select {...register("type")}>
+        <select {...register("category")}>
           {categories.map((category) => (
             <option value={category.id} key={category.id}>
               {category.name}
