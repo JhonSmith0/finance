@@ -1,0 +1,35 @@
+services:
+  db:
+    image: mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+    volumes:
+      - mysql:/var/lib/mysql
+
+  api:
+    extends:
+      file: ./docker-compose-base.yml
+      service: base
+    expose:
+      - 3000
+    command: sh -c "cd services/api && pnpm start:dev"
+    depends_on:
+      - db
+    environment:
+      - CLIENT_HOST=client
+      - CLIENT_PORT=5173
+
+  client:
+    extends:
+      file: ./docker-compose-base.yml
+      service: base
+    environment:
+      - VITE_API_HOST=api
+      - VITE_API_PORT=3000
+    command: sh -c "cd services/client && pnpm dev --host"
+    depends_on:
+      - api
+
+volumes:
+  mysql:
