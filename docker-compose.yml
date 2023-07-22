@@ -13,12 +13,15 @@ services:
       service: base
     expose:
       - 3000
-    command: sh -c "cd services/api && pnpm start:dev"
+    command: sh -c "cd services/api && node ./migrate-db.js && pnpm start:dev"
     depends_on:
       - db
     environment:
       - CLIENT_HOST=client
       - CLIENT_PORT=5173
+      - DATABASE_URL=mysql://root:1234@db:3306/project
+    env_file:
+      - .env.api
 
   client:
     extends:
