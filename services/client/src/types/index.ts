@@ -1,3 +1,5 @@
+export * from "@/schema/transaction";
+
 export interface ITransaction {
   id: string;
   date: string;
@@ -6,8 +8,6 @@ export interface ITransaction {
   description: string;
   category: ICategoryType;
 }
-
-export type ITransactionCreate = Omit<ITransaction, "id">;
 
 export type ITransactionUpdate = Partial<ITransaction> &
   Pick<ITransaction, "id">;
