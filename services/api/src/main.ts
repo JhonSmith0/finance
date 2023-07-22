@@ -28,6 +28,11 @@ const envs = [
 ];
 
 async function bootstrap() {
+  const PORT = 3000 || process.env.API_PORT;
+
+  const adress = (await lookup('api')).address;
+  console.log(`http://${adress}:${PORT}`);
+
   for (const env_key of envs) {
     const env_value = process.env[env_key];
     if (!env_value) throw new Error(`Missing env property called "${env_key}"`);
@@ -53,6 +58,6 @@ async function bootstrap() {
 
   app.setGlobalPrefix('/api');
 
-  await app.listen(3000);
+  await app.listen(PORT);
 }
 bootstrap();

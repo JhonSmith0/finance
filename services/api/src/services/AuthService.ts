@@ -1,4 +1,9 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { UserLoginDTO } from 'src/dto/UserLoginDTO';
 import { UserRegisterDTO } from 'src/dto/UserRegisterDTO';
 import { User } from 'src/models/User';
 import { CryptoService } from './CryptoService';
@@ -26,5 +31,17 @@ export class AuthService {
     await this.database.user.create({ data: newUser });
 
     return newUser;
+  }
+
+  public async login(data: UserLoginDTO) {
+    const user = await this.database.user.findUnique({
+      where: {
+        email: data.email,
+      },
+    });
+    const exists = !!user;
+    if (!exists) throw new NotFoundException();
+
+    return user;
   }
 }
