@@ -30,7 +30,7 @@ export class AuthService {
 
     await this.database.user.create({ data: newUser });
 
-    return newUser;
+    return new User(newUser);
   }
 
   public async login(data: UserLoginDTO) {
@@ -42,6 +42,6 @@ export class AuthService {
     const exists = !!user;
     if (!exists) throw new NotFoundException();
 
-    return user;
+    return new User(user);
   }
 }

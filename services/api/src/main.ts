@@ -6,6 +6,7 @@ import {
 import { NestFactory } from '@nestjs/core';
 import { lookup } from 'dns/promises';
 import { RootModule } from './modules/RootModule';
+import { timespan } from './utils/timespan';
 
 async function resolveHost(hostname: string) {
   return (await lookup(hostname)).address;
@@ -40,8 +41,15 @@ async function bootstrap() {
     if (!env_value) throw new Error(`Missing env property called "${env_key}"`);
   }
 
+  const JWT_COOKIE_EXPIRATION_TIME = +timespan(process.env.JWT_EXPIRATION_TIME);
+  if (!JWT_COOKIE_EXPIRATION_TIME)
+    throw new Error('Possibly invalid JWT_EXPIRATION_TIME');
+
   //@ts-ignore
   process.env.BCRYPT_SALT = +process.env.BCRYPT_SALT as number;
+
+  //@ts-ignore
+  process.env.JWT_COOKIE_EXPIRATION_TIME = JWT_COOKIE_EXPIRATION_TIME;
 
   const CLIENT_HOST = process.env.CLIENT_HOST;
   const CLIENT_PORT = process.env.CLIENT_PORT;

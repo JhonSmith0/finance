@@ -8,6 +8,7 @@ declare global {
       //
       readonly JWT_EXPIRATION_TIME: string;
       readonly JWT_SECRET_KEY: string;
+      readonly JWT_COOKIE_EXPIRATION_TIME: number;
     }
   }
 
