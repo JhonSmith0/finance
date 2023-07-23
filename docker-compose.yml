@@ -33,6 +33,7 @@ services:
     command: sh -c "cd services/client && pnpm dev --host"
     depends_on:
       - api
+    network_mode: "service:api"
 
 volumes:
   mysql:

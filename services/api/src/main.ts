@@ -30,8 +30,10 @@ const envs = [
 async function bootstrap() {
   const PORT = 3000 || process.env.API_PORT;
 
-  const adress = (await lookup('api')).address;
-  console.log(`http://${adress}:${PORT}`);
+  const apiIp = (await lookup('api')).address;
+  const apiAdress = `http://${apiIp}:${PORT}`;
+
+  console.log({ apiAdress });
 
   for (const env_key of envs) {
     const env_value = process.env[env_key];
@@ -43,15 +45,19 @@ async function bootstrap() {
 
   const CLIENT_HOST = process.env.CLIENT_HOST;
   const CLIENT_PORT = process.env.CLIENT_PORT;
-  const CLIENT_IP = await resolveHost(CLIENT_HOST);
+
+  const CLIENT_IP = apiIp;
 
   const CLIENT_ADRESS = `http://${CLIENT_IP}:${CLIENT_PORT}`;
 
   const app = await NestFactory.create(RootModule);
 
+  console.log({ CLIENT_ADRESS });
+
   app.enableCors({
     origin: [CLIENT_ADRESS],
     methods: ['POST', 'PATCH', 'PUT', 'DELETE', 'GET'],
+    credentials: true,
   });
 
   app.useGlobalPipes(new ValidationPipe());
