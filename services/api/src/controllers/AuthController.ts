@@ -1,4 +1,14 @@
-import { Body, Controller, HttpCode, Post, Res } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Headers,
+  HttpCode,
+  Post,
+  Res,
+} from '@nestjs/common';
+import { parse } from 'cookie';
 import { Response } from 'express';
 import { UserLoginDTO } from 'src/dto/UserLoginDTO';
 import { UserRegisterDTO } from 'src/dto/UserRegisterDTO';
@@ -38,5 +48,20 @@ export class AuthController {
   public async register(@Body() body: UserRegisterDTO, @Res() res: Response) {
     const user = await this.authService.register(body);
     this.generateAndSetJwtOnCookies(res, user).end();
+  }
+
+  @Get('me')
+  public async getMe(@Headers('cookie') cookies: string) {
+    const cookieObj = parse(cookies || '');
+    const { authorization } = cookieObj;
+    if (!authorization) throw new BadRequestException();
+
+    try {
+      const { id } = this.jwtService.verify(authorization) as { id: string };
+      const user = await this.authService.getUser(id);
+      return user;
+    } catch (error) {
+      throw new BadRequestException();
+    }
   }
 }

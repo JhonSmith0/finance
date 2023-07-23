@@ -1,8 +1,11 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
+import { SafeUserDTO } from 'src/dto/SafeUserDTO';
 import { UserLoginDTO } from 'src/dto/UserLoginDTO';
 import { UserRegisterDTO } from 'src/dto/UserRegisterDTO';
 import { User } from 'src/models/User';
@@ -43,5 +46,13 @@ export class AuthService {
     if (!exists) throw new NotFoundException();
 
     return new User(user);
+  }
+
+  public async getUser(id: string) {
+    const user = await this.database.user.findUnique({ where: { id } });
+    if (!user) throw new BadRequestException();
+    return plainToInstance(SafeUserDTO, user, {
+      excludeExtraneousValues: true,
+    });
   }
 }
