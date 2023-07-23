@@ -1,11 +1,24 @@
-import { Outlet, RouteObject, redirect } from "react-router-dom";
+import { getMeService } from "@/services/me";
+import { store } from "@/state";
+import { setUser } from "@/state/slices/user";
+import { RouteObject, redirect } from "react-router-dom";
 
 export const routes: RouteObject[] = [
   {
     path: "/",
+
     async lazy() {
       return {
         Component: (await import("@/pages/Home")).HomePage,
+        async loader() {
+          try {
+            const user = await getMeService();
+            store.dispatch(setUser(user));
+            return user;
+          } catch (error) {
+            return redirect("/login");
+          }
+        },
       };
     },
     children: [
