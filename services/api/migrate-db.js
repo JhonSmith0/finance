@@ -12,7 +12,7 @@ const {
 const { promisify } = require('util');
 
 const envPath = resolve(__dirname, '.env');
-const tempEnvPath = resolve(__dirname, randomUUID().slice(0, 6));
+const tempEnvPath = resolve(__dirname, '.temp' + randomUUID().slice(0, 6));
 
 if (!existsSync(envPath)) writeFileSync(envPath, '');
 
