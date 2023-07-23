@@ -1,3 +1,4 @@
+export * from "@/schema/category";
 export * from "@/schema/transaction";
 
 export interface ITransaction {
@@ -24,7 +25,6 @@ export interface ICategory {
   name: string;
 }
 
-export interface ICategoryCreate extends Pick<ICategory, "name"> {}
 export interface ICategoryCreateUpdateForm extends Pick<ICategory, "name"> {}
 
 export type ICategoryUpdate = Pick<ICategory, "id"> & Partial<ICategory>;

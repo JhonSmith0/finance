@@ -1,17 +1,19 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
-  Headers,
   HttpCode,
   Post,
   Res,
+  UseGuards,
 } from '@nestjs/common';
-import { parse } from 'cookie';
+import { plainToInstance } from 'class-transformer';
 import { Response } from 'express';
+import { UserEntity } from 'src/decorators/UserEntity';
+import { SafeUserDTO } from 'src/dto/SafeUserDTO';
 import { UserLoginDTO } from 'src/dto/UserLoginDTO';
 import { UserRegisterDTO } from 'src/dto/UserRegisterDTO';
+import { UserLogged } from 'src/guards/UserLogged';
 import { User } from 'src/models/User';
 import { AuthService } from 'src/services/AuthService';
 import { JWTService } from 'src/services/JWTService';
@@ -51,17 +53,10 @@ export class AuthController {
   }
 
   @Get('me')
-  public async getMe(@Headers('cookie') cookies: string) {
-    const cookieObj = parse(cookies || '');
-    const { authorization } = cookieObj;
-    if (!authorization) throw new BadRequestException();
-
-    try {
-      const { id } = this.jwtService.verify(authorization) as { id: string };
-      const user = await this.authService.getUser(id);
-      return user;
-    } catch (error) {
-      throw new BadRequestException();
-    }
+  @UseGuards(UserLogged)
+  public async getMe(@UserEntity() user: User) {
+    return plainToInstance(SafeUserDTO, user, {
+      excludeExtraneousValues: true,
+    });
   }
 }

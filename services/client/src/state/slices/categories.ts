@@ -32,9 +32,12 @@ const slice = createSlice({
       if (index < 0) return;
       state.categories.splice(index, 1);
     },
+    setCategories(state, action: PayloadAction<ICategory[]>) {
+      state.categories = action.payload;
+    },
   },
 });
 
 export default slice;
 
-export const { add, remove, setEditing, update } = slice.actions;
+export const { add, remove, setEditing, update, setCategories } = slice.actions;

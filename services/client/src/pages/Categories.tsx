@@ -1,10 +1,21 @@
 import { NewCategory } from "@/components/CategoryManager";
 import { CategoryList } from "@/components/CategoryManager/CategoryList";
 import { EditCategory } from "@/components/CategoryManager/EditCategory";
-import { useAppSelector } from "@/state/hooks";
+import CategoryService from "@/services/category";
+import { useAppDispatch, useAppSelector } from "@/state/hooks";
+import { setCategories } from "@/state/slices/categories";
+import { useEffect } from "react";
 
 export function CategoriesPage() {
   const state = useAppSelector((state) => state.categories.editing);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    CategoryService.getAll().then((data) => {
+      dispatch(setCategories(data));
+    });
+  }, []);
+
   return (
     <div>
       <h3>Categories</h3>

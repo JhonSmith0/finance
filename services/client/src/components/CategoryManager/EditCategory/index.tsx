@@ -1,6 +1,7 @@
+import CategoryService from "@/services/category";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
-import { add, setEditing, update } from "@/state/slices/categories";
-import { ICategory, ICategoryCreateUpdateForm } from "@/types";
+import { setEditing, update } from "@/state/slices/categories";
+import { ICategory, ICategoryUpdate } from "@/types";
 import { useForm } from "react-hook-form";
 
 export function EditCategory() {
@@ -9,14 +10,15 @@ export function EditCategory() {
   const currentCategory = useAppSelector(
     (state) => state.categories.editing as ICategory
   );
-  const form = useForm<ICategoryCreateUpdateForm>({
+  const form = useForm<ICategoryUpdate>({
     defaultValues: currentCategory,
   });
 
   return (
     <form
-      onSubmit={form.handleSubmit((data) => {
-        dispatch(update({ ...data, id: currentCategory.id }));
+      onSubmit={form.handleSubmit(async (data) => {
+        const updated = await CategoryService.update(currentCategory.id, data);
+        dispatch(update(updated));
       })}
     >
       <fieldset>
