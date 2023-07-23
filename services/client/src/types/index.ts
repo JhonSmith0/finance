@@ -28,3 +28,9 @@ export interface ICategoryCreate extends Pick<ICategory, "name"> {}
 export interface ICategoryCreateUpdateForm extends Pick<ICategory, "name"> {}
 
 export type ICategoryUpdate = Pick<ICategory, "id"> & Partial<ICategory>;
+
+export interface IUser {
+  id: string;
+  email: string;
+  name: string;
+}
