@@ -2,8 +2,8 @@ services:
   db:
     image: mysql
     restart: always
-    environment:
-      - MYSQL_ROOT_PASSWORD=1234
+    env_file:
+      - .env
     volumes:
       - mysql:/var/lib/mysql
 
@@ -19,9 +19,8 @@ services:
     environment:
       - CLIENT_HOST=client
       - CLIENT_PORT=5173
-      - DATABASE_URL=mysql://root:1234@db:3306/project
     env_file:
-      - .env.api
+      - .env
 
   client:
     extends:

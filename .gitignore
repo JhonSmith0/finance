@@ -132,3 +132,4 @@ dist
 ignore/
 
 .env*
+!.env*.template
