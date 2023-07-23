@@ -13,4 +13,6 @@ html {
 body {
   font-family: sans-serif;
   font-size: 1.6rem;
+  background: #111;
+  color: white;
 }
