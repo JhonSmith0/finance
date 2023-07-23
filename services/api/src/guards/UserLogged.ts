@@ -23,6 +23,7 @@ export class UserLogged implements CanActivate {
       .getRequest<Request & { user: User }>();
     const cookieObj = parse(request.headers.cookie || '');
     const { authorization } = cookieObj;
+    if (!authorization) throw new BadRequestException();
 
     const { id } = this.jwtService.verify(authorization) as { id: string };
     const user = await this.database.user.findUnique({
