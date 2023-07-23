@@ -1,4 +1,6 @@
+import { TransactionService } from "@/services/transaction";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
+import { add } from "@/state/slices/transactions";
 import { ITransactionCreate, newTransactionSchema } from "@/types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
@@ -12,8 +14,9 @@ export function NewTransaction() {
 
   return (
     <form
-      onSubmit={handleSubmit((data) => {
-        console.log(data);
+      onSubmit={handleSubmit(async (data) => {
+        const result = await TransactionService.create(data);
+        dispatch(add(result));
       })}
     >
       <fieldset>
@@ -34,7 +37,7 @@ export function NewTransaction() {
       </fieldset>
       <fieldset>
         <label>Categoria</label>
-        <select {...register("category")}>
+        <select {...register("categoryId")}>
           {categories.map((category) => (
             <option value={category.id} key={category.id}>
               {category.name}
