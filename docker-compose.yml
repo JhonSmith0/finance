@@ -13,7 +13,7 @@ services:
       service: base
     expose:
       - 3000
-    command: sh -c "cd services/api && node ./migrate-db.js && pnpm start:dev"
+    command: sh -c "cd services/api && node migrate-db.js && pnpm start:dev"
     depends_on:
       - db
     environment:
