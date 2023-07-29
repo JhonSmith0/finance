@@ -6,6 +6,6 @@ export const CategoryEntity = createParamDecorator(
   (field: keyof Category, ctx: ExecutionContextHost) => {
     const request = ctx.switchToHttp().getRequest();
     const category = request.category as Category | void;
-    return category?.[field];
+    return field ? category?.[field] : category;
   },
 );
