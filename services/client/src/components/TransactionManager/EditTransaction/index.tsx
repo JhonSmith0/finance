@@ -1,6 +1,6 @@
 import { useUpdateTransaction } from "@/hooks/useUpdateTransaction";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
-import { add, setEditing, update } from "@/state/slices/transactions";
+import { setEditing } from "@/state/slices/transactions";
 import { ITransaction } from "@/types";
 
 export function EditTransaction() {
@@ -8,7 +8,8 @@ export function EditTransaction() {
   const currentTransaction = useAppSelector(
     (state) => state.transactions.editing as ITransaction
   );
-  const { register, handleSubmit } = useUpdateTransaction(currentTransaction);
+  const { register, handleSubmit, setValue } =
+    useUpdateTransaction(currentTransaction);
   const dispatch = useAppDispatch();
 
   return (
@@ -27,7 +28,15 @@ export function EditTransaction() {
       </fieldset>
       <fieldset>
         <label>Categoria</label>
-        <select {...register("category")}>
+        <select
+          {...register("categoryId", {
+            setValueAs(value) {
+              const categoryName = categories.find((e) => e.id === value);
+              if (categoryName) setValue("category.name", categoryName.name);
+              return value;
+            },
+          })}
+        >
           {categories.map((category) => (
             <option value={category.id} key={category.id}>
               {category.name}

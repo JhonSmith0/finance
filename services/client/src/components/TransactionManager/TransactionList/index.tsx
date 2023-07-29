@@ -8,6 +8,7 @@ interface Props {
 
 export function TransactionList(props: Props) {
   const dispatch = useAppDispatch();
+
   return (
     <div>
       <h2>Lista transacoes</h2>
@@ -20,7 +21,7 @@ export function TransactionList(props: Props) {
                 <span>{e.description}|</span>
                 <span>{e.type}|</span>
                 <span>{e.value}|</span>
-                <span>{e.category}|</span>
+                <span>{e.category.name}|</span>
                 <button onClick={() => dispatch(setEditing(e))}>Edit</button>
                 <button onClick={() => dispatch(remove(e.id))}>Remove</button>
               </div>
