@@ -1,3 +1,4 @@
+import { TransactionService } from "@/services/transaction";
 import { useAppDispatch } from "@/state/hooks";
 import { remove, setEditing } from "@/state/slices/transactions";
 import { ITransaction } from "@/types";
@@ -8,6 +9,11 @@ interface Props {
 
 export function TransactionList(props: Props) {
   const dispatch = useAppDispatch();
+
+  async function deleteTransaction(id: string) {
+    await TransactionService.delete(id);
+    dispatch(remove(id));
+  }
 
   return (
     <div>
@@ -23,7 +29,7 @@ export function TransactionList(props: Props) {
                 <span>{e.value}|</span>
                 <span>{e.category.name}|</span>
                 <button onClick={() => dispatch(setEditing(e))}>Edit</button>
-                <button onClick={() => dispatch(remove(e.id))}>Remove</button>
+                <button onClick={() => deleteTransaction(e.id)}>Remove</button>
               </div>
             </li>
           ))}

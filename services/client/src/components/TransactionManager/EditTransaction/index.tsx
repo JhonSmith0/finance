@@ -1,32 +1,52 @@
-import { useUpdateTransaction } from "@/hooks/useUpdateTransaction";
+import { TransactionService } from "@/services/transaction";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
-import { setEditing } from "@/state/slices/transactions";
-import { ITransaction } from "@/types";
+import { setEditing, update } from "@/state/slices/transactions";
+import { ITransaction, ITransactionUpdate } from "@/types";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 export function EditTransaction() {
   const categories = useAppSelector((state) => state.categories.categories);
   const currentTransaction = useAppSelector(
     (state) => state.transactions.editing as ITransaction
   );
-  const { register, handleSubmit, setValue } =
-    useUpdateTransaction(currentTransaction);
+
   const dispatch = useAppDispatch();
+  const [disabled, setDisabled] = useState(false);
+
+  const { register, handleSubmit, setValue } = useForm<ITransactionUpdate>({
+    defaultValues: currentTransaction,
+  });
 
   return (
-    <form onSubmit={handleSubmit}>
-      <fieldset>
+    <form
+      onSubmit={handleSubmit(async (data) => {
+        try {
+          const result = await TransactionService.update(data);
+          dispatch(update(result));
+        } catch (error) {
+        } finally {
+          setDisabled(false);
+        }
+      })}
+    >
+      <fieldset disabled={disabled}>
         <label>Data</label>
-        <input type="date" {...register("date")} />
+        <input type="date" {...register("date", { valueAsDate: true })} />
       </fieldset>
-      <fieldset>
+      <fieldset disabled={disabled}>
         <label>Descrição</label>
         <input type="text" {...register("description")} />
       </fieldset>
-      <fieldset>
+      <fieldset disabled={disabled}>
         <label>Valor</label>
-        <input type="number" step={0.01} {...register("value")} />
+        <input
+          type="number"
+          step={0.01}
+          {...register("value", { valueAsNumber: true })}
+        />
       </fieldset>
-      <fieldset>
+      <fieldset disabled={disabled}>
         <label>Categoria</label>
         <select
           {...register("categoryId", {
@@ -44,7 +64,7 @@ export function EditTransaction() {
           ))}
         </select>
       </fieldset>
-      <fieldset>
+      <fieldset disabled={disabled}>
         <label>Tipo</label>
         <select {...register("type")}>
           <option value={"income"}>Receita</option>
