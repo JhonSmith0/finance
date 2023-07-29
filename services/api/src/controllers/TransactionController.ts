@@ -38,6 +38,12 @@ export class TransactionController {
     return result;
   }
 
+  @Get(':id')
+  @UseGuards(UserHasAcessToTransactionInParamsId)
+  public async read(@TransactionEntity() transaction: TransactionWithCategory) {
+    return transaction;
+  }
+
   @Patch(':id')
   @UseGuards(UserHasAcessToTransactionInParamsId)
   public async update(
