@@ -1,11 +1,13 @@
 import { Module, Provider } from '@nestjs/common';
 import { AuthController } from 'src/controllers/AuthController';
 import { CategoryController } from 'src/controllers/CategoryController';
+import { TransactionController } from 'src/controllers/TransactionController';
 import { AuthService } from 'src/services/AuthService';
 import { CategoryService } from 'src/services/CategoryService';
 import { CryptoService } from 'src/services/CryptoService';
 import { JWTService } from 'src/services/JWTService';
 import { PrismaService } from 'src/services/PrismaService';
+import { TransactionService } from 'src/services/TransactionService';
 
 const providers: Provider[] = [
   {
@@ -22,10 +24,11 @@ const providers: Provider[] = [
   AuthService,
   PrismaService,
   CategoryService,
+  TransactionService,
 ];
 
 @Module({
-  controllers: [AuthController, CategoryController],
+  controllers: [AuthController, CategoryController, TransactionController],
   providers,
   imports: [],
 })
