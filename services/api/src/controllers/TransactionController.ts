@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   NotFoundException,
   Patch,
@@ -42,6 +43,12 @@ export class TransactionController {
   @UseGuards(UserHasAcessToTransactionInParamsId)
   public async read(@TransactionEntity() transaction: TransactionWithCategory) {
     return transaction;
+  }
+
+  @Delete(':id')
+  @UseGuards(UserHasAcessToTransactionInParamsId)
+  public async delete(@TransactionEntity('id') id: string) {
+    return await this.transactionService.delete(id);
   }
 
   @Patch(':id')

@@ -25,6 +25,21 @@ export class TransactionService {
     });
   }
 
+  public async delete(id: string): Promise<TransactionWithCategory> {
+    return await this.database.transaction.delete({
+      where: {
+        id,
+      },
+
+      include: {
+        category: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+  }
   public async read(id: string): Promise<TransactionWithCategory | void> {
     return await this.database.transaction.findUnique({
       where: {
