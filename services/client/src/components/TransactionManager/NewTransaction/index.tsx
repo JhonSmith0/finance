@@ -1,8 +1,11 @@
+import CategoryService from "@/services/category";
 import { TransactionService } from "@/services/transaction";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
+import { setCategories } from "@/state/slices/categories";
 import { add } from "@/state/slices/transactions";
 import { ITransactionCreate, newTransactionSchema } from "@/types";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 export function NewTransaction() {
@@ -10,13 +13,20 @@ export function NewTransaction() {
   const { register, handleSubmit } = useForm<ITransactionCreate>({
     resolver: yupResolver(newTransactionSchema),
   });
+
   const categories = useAppSelector((state) => state.categories.categories);
+
+  useEffect(() => {
+    CategoryService.getAll()
+      .then((data) => dispatch(setCategories(data)))
+      .catch(console.error);
+  }, []);
 
   return (
     <form
       onSubmit={handleSubmit(async (data) => {
-        const result = await TransactionService.create(data);
-        dispatch(add(result));
+        const newTransaction = await TransactionService.create(data);
+        dispatch(add(newTransaction));
       })}
     >
       <fieldset>
