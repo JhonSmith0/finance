@@ -37,7 +37,8 @@ function main() {
   console.log('migrating db...');
 
   try {
-    execSync(`pnpm prisma migrate  dev --name=${Math.random() + ''}`);
+    execSync(`pnpm prisma generate`);
+    execSync(`pnpm prisma db push`);
   } catch (error) {
     console.error(`prisma migration failed: ${error.message}`);
   }
