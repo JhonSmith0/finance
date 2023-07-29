@@ -34,6 +34,14 @@ export class CategoryService {
   }
 
   public async deleteCategory(user: User, id: string) {
+    await this.db.transaction.deleteMany({
+      where: {
+        category: {
+          id,
+        },
+      },
+    });
+
     return await this.db.category.delete({
       where: {
         userId: user.id,
