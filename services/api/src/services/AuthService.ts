@@ -1,10 +1,4 @@
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-  NotFoundException,
-  UseGuards,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { SafeUserDTO } from 'src/dto/SafeUserDTO';
 import { UserLoginDTO } from 'src/dto/UserLoginDTO';
@@ -12,7 +6,6 @@ import { UserRegisterDTO } from 'src/dto/UserRegisterDTO';
 import { User } from 'src/models/User';
 import { CryptoService } from './CryptoService';
 import { PrismaService } from './PrismaService';
-import { UserLogged } from 'src/guards/UserLogged';
 
 @Injectable()
 export class AuthService {
@@ -28,7 +21,7 @@ export class AuthService {
       },
     });
     const exists = !!user;
-    if (exists) throw new ConflictException();
+    if (exists) throw new BadRequestException();
 
     const newUser = new User(data);
     await newUser.hashPassword(this.cryptoService);
@@ -45,7 +38,7 @@ export class AuthService {
       },
     });
     const exists = !!user;
-    if (!exists) throw new NotFoundException();
+    if (!exists) throw new BadRequestException();
 
     return new User(user);
   }
