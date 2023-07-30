@@ -1,11 +1,3 @@
-import { IsString, MaxLength, MinLength } from 'class-validator';
-import { Category } from 'src/models/Category';
+import { CategoryNewDTO } from './CategoryNewDTO';
 
-export class CategoryUpdateDTO
-  implements ClassProperties<Omit<Category, 'id' | 'userId'>>
-{
-  @MaxLength(24)
-  @MinLength(1)
-  @IsString()
-  public name: string;
-}
+export class CategoryUpdateDTO extends CategoryNewDTO {}

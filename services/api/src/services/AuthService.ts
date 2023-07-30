@@ -4,6 +4,7 @@ import { SafeUserDTO } from 'src/dto/SafeUserDTO';
 import { UserLoginDTO } from 'src/dto/UserLoginDTO';
 import { UserRegisterDTO } from 'src/dto/UserRegisterDTO';
 import { User } from 'src/models/User';
+import { CategoryService } from './CategoryService';
 import { CryptoService } from './CryptoService';
 import { PrismaService } from './PrismaService';
 
@@ -12,6 +13,7 @@ export class AuthService {
   constructor(
     private cryptoService: CryptoService,
     private database: PrismaService,
+    private categoryService: CategoryService,
   ) {}
 
   public async register(data: UserRegisterDTO) {
@@ -27,6 +29,7 @@ export class AuthService {
     await newUser.hashPassword(this.cryptoService);
 
     await this.database.user.create({ data: newUser });
+    await this.categoryService.createDefaultCategory(newUser);
 
     return new User(newUser);
   }

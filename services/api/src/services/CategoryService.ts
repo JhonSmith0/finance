@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { CategoryNewDTO } from 'src/dto/CategoryNewDTO';
 import { CategoryUpdateDTO } from 'src/dto/CategoryUpdateDTO';
 import { Category } from 'src/models/Category';
@@ -9,7 +13,11 @@ import { PrismaService } from './PrismaService';
 export class CategoryService {
   constructor(private db: PrismaService) {}
 
-  public async newCategory(data: CategoryNewDTO, user: User) {
+  public async newCategory(
+    data: CategoryNewDTO,
+    user: User,
+    defaultCategory = false,
+  ) {
     const exists = await this.db.category.findFirst({
       where: {
         userId: user.id,
@@ -18,7 +26,11 @@ export class CategoryService {
     });
 
     if (!!exists) throw new ConflictException();
-    const category = new Category({ ...data, userId: user.id });
+    const category = new Category({
+      ...data,
+      userId: user.id,
+      defaultCategory,
+    });
 
     await this.db.category.create({ data: category });
 
@@ -43,11 +55,43 @@ export class CategoryService {
     });
   }
 
+  public async getDefaultCategory(user: User) {
+    return this.db.category.findFirst({
+      where: {
+        user: {
+          id: user.id,
+        },
+        defaultCategory: true,
+      },
+    });
+  }
+
+  public async createDefaultCategory(user: User) {
+    const exists = await this.getDefaultCategory(user);
+    if (exists) return exists;
+
+    return this.db.category.create({
+      data: new Category({
+        defaultCategory: true,
+        name: 'Diversos',
+        userId: user.id,
+      }),
+    });
+  }
+
   public async deleteCategory(user: User, id: string) {
-    await this.db.transaction.deleteMany({
+    const defaultCategory = await this.createDefaultCategory(user);
+    if (id === defaultCategory.id) throw new BadRequestException();
+
+    await this.db.transaction.updateMany({
       where: {
         category: {
           id,
+        },
+      },
+      data: {
+        categoryId: {
+          set: defaultCategory.id,
         },
       },
     });
