@@ -68,7 +68,7 @@ export function EditTransaction() {
         <label>Tipo</label>
         <select {...register("type")}>
           <option value={"income"}>Receita</option>
-          <option value={"expenses"}>Despesa</option>
+          <option value={"expense"}>Despesa</option>
         </select>
       </fieldset>
       <button type="submit">Salvar</button>
