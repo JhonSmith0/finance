@@ -102,8 +102,8 @@ export class TransactionService {
       }),
     ];
 
-    const income = (await incomeProm)._sum.value;
-    const expense = (await expenseProm)._sum.value;
+    const income = (await incomeProm)._sum.value || 0;
+    const expense = (await expenseProm)._sum.value || 0;
 
     return {
       income,
