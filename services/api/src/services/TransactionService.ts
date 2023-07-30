@@ -89,4 +89,26 @@ export class TransactionService {
       },
     });
   }
+
+  public async balance(user: User) {
+    const [incomeProm, expenseProm] = [
+      this.database.transaction.aggregate({
+        _sum: { value: true },
+        where: { type: 'income' },
+      }),
+      this.database.transaction.aggregate({
+        _sum: { value: true },
+        where: { type: 'expense' },
+      }),
+    ];
+
+    const income = (await incomeProm)._sum.value;
+    const expense = (await expenseProm)._sum.value;
+
+    return {
+      income,
+      expense,
+      balance: income - expense,
+    };
+  }
 }

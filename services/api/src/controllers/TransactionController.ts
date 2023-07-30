@@ -27,6 +27,11 @@ export class TransactionController {
     private categoryService: CategoryService,
   ) {}
 
+  @Get('balance')
+  public async balance(@UserEntity() user: User) {
+    return this.transactionService.balance(user);
+  }
+
   @Post()
   public async create(
     @Body() data: TransactionNewDTO,
