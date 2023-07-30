@@ -32,6 +32,7 @@ const slice = createSlice({
         (e) => e.id === payload.payload
       );
       if (index < 0) return;
+      if (state.editing?.id === payload.payload) state.editing = null;
       state.transactions.splice(index, 1);
     },
     setTransactions(state, action: PayloadAction<ITransaction[]>) {

@@ -30,6 +30,7 @@ const slice = createSlice({
     remove(state, payload: PayloadAction<ICategory["id"]>) {
       const index = state.categories.findIndex((e) => e.id === payload.payload);
       if (index < 0) return;
+      if (state.editing?.id === payload.payload) state.editing = null;
       state.categories.splice(index, 1);
     },
     setCategories(state, action: PayloadAction<ICategory[]>) {
