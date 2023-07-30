@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
-import transactionsSlice from "./slices/transactions";
+import balanceSlice from "./slices/balance";
 import categoriesSlice from "./slices/categories";
+import transactionsSlice from "./slices/transactions";
 import userSlice from "./slices/user";
 
 export const store = configureStore({
@@ -8,6 +9,7 @@ export const store = configureStore({
     transactions: transactionsSlice.reducer,
     categories: categoriesSlice.reducer,
     user: userSlice.reducer,
+    balance: balanceSlice.reducer,
   },
 });
 

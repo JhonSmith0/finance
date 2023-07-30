@@ -37,3 +37,9 @@ export interface IUser {
   email: string;
   name: string;
 }
+
+export interface IBalance {
+  balance: number;
+  income: number;
+  expense: number;
+}

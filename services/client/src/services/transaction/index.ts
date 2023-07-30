@@ -1,4 +1,9 @@
-import { ITransaction, ITransactionCreate, ITransactionUpdate } from "@/types";
+import {
+  IBalance,
+  ITransaction,
+  ITransactionCreate,
+  ITransactionUpdate,
+} from "@/types";
 import { api } from "../http";
 
 export class TransactionService {
@@ -26,6 +31,10 @@ export class TransactionService {
       `/transaction/${data.id}`,
       data
     );
+    return result.data;
+  }
+  public static async balance() {
+    const result = await api.get<IBalance>(`/transaction/balance`);
     return result.data;
   }
 }

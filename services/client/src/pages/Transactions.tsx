@@ -1,3 +1,4 @@
+import { Balance } from "@/components/Balance";
 import { EditTransaction } from "@/components/TransactionManager/EditTransaction";
 import { NewTransaction } from "@/components/TransactionManager/NewTransaction";
 import { TransactionList } from "@/components/TransactionManager/TransactionList";
@@ -10,6 +11,7 @@ export function TransactionsPage() {
 
   return (
     <div>
+      <Balance />
       {editing ? <EditTransaction /> : <NewTransaction />}
       <TransactionList transactions={transactions} />
     </div>
