@@ -5,8 +5,13 @@ export const newTransactionSchema = y.object({
   value: y.number().required(),
   type: y.mixed<"expense" | "income">().oneOf(["expense", "income"]).required(),
   description: y.string().default(""),
-  category: y.string().required(),
+  categoryId: y.string().required(),
 });
+
+export const updateTransactionSchema = newTransactionSchema;
 
 export interface ITransactionCreate
   extends y.InferType<typeof newTransactionSchema> {}
+
+export interface ITransactionUpdate
+  extends y.InferType<typeof updateTransactionSchema> {}

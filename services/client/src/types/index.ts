@@ -7,7 +7,10 @@ export interface ITransaction {
   value: number;
   type: ITransactionType;
   description: string;
-  category: ICategoryType;
+  categoryId: ICategoryType;
+  category: {
+    name: string;
+  };
 }
 
 export type ITransactionUpdate = Partial<ITransaction> &

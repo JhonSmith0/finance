@@ -1,5 +1,9 @@
+import CategoryService from "@/services/category";
 import { getMeService } from "@/services/me";
+import { TransactionService } from "@/services/transaction";
 import { store } from "@/state";
+import { setCategories } from "@/state/slices/categories";
+import { setTransactions } from "@/state/slices/transactions";
 import { setUser } from "@/state/slices/user";
 import { RouteObject, redirect } from "react-router-dom";
 
@@ -27,6 +31,11 @@ export const routes: RouteObject[] = [
         async lazy() {
           return {
             Component: (await import("@/pages/Transactions")).TransactionsPage,
+            async loader() {
+              const transactions = await TransactionService.getAll();
+              store.dispatch(setTransactions(transactions));
+              return transactions;
+            },
           };
         },
       },
@@ -35,6 +44,11 @@ export const routes: RouteObject[] = [
         async lazy() {
           return {
             Component: (await import("@/pages/Categories")).CategoriesPage,
+            async loader() {
+              const data = await CategoryService.getAll();
+              store.dispatch(setCategories(data));
+              return data;
+            },
           };
         },
       },

@@ -3,15 +3,18 @@ import {
   Controller,
   Delete,
   Get,
-  Param,
+  NotFoundException,
   Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { CategoryEntity } from 'src/decorators/CategoryEntity';
 import { UserEntity } from 'src/decorators/UserEntity';
 import { CategoryNewDTO } from 'src/dto/CategoryNewDTO';
 import { CategoryUpdateDTO } from 'src/dto/CategoryUpdateDTO';
+import { UserHasAcessToCategoryInParamsId } from 'src/guards/UserHasAcessToCategoryInParamsId';
 import { UserLogged } from 'src/guards/UserLogged';
+import { Category } from 'src/models/Category';
 import { User } from 'src/models/User';
 import { CategoryService } from 'src/services/CategoryService';
 
@@ -30,18 +33,27 @@ export class CategoryController {
     return await this.categoryService.getAllCategories(user);
   }
 
+  @Get(':id')
+  @UseGuards(UserHasAcessToCategoryInParamsId)
+  public async readById(@CategoryEntity() category: Category) {
+    if (!category) throw new NotFoundException();
+    return category;
+  }
+
   @Delete(':id')
+  @UseGuards(UserHasAcessToCategoryInParamsId)
   public async deleteCategory(
     @UserEntity() user: User,
-    @Param('id') id: string,
+    @CategoryEntity('id') id: string,
   ) {
     return await this.categoryService.deleteCategory(user, id);
   }
 
   @Patch(':id')
+  @UseGuards(UserHasAcessToCategoryInParamsId)
   public async updateCategory(
     @UserEntity() user: User,
-    @Param('id') id: string,
+    @CategoryEntity('id') id: string,
     @Body() body: CategoryUpdateDTO,
   ) {
     return await this.categoryService.updateCategory(user, id, body);

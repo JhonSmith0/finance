@@ -25,6 +25,16 @@ export class CategoryService {
     return category;
   }
 
+  public async readCategory(id: string) {
+    const result = await this.db.category.findUnique({
+      where: {
+        id,
+      },
+    });
+    if (result) return new Category(result);
+    return result;
+  }
+
   public async getAllCategories(user: User) {
     return await this.db.category.findMany({
       where: {
@@ -34,6 +44,14 @@ export class CategoryService {
   }
 
   public async deleteCategory(user: User, id: string) {
+    await this.db.transaction.deleteMany({
+      where: {
+        category: {
+          id,
+        },
+      },
+    });
+
     return await this.db.category.delete({
       where: {
         userId: user.id,

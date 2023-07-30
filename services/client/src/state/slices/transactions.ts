@@ -34,9 +34,13 @@ const slice = createSlice({
       if (index < 0) return;
       state.transactions.splice(index, 1);
     },
+    setTransactions(state, action: PayloadAction<ITransaction[]>) {
+      state.transactions = action.payload;
+    },
   },
 });
 
 export default slice;
 
-export const { add, setEditing, remove, update } = slice.actions;
+export const { add, setEditing, remove, update, setTransactions } =
+  slice.actions;

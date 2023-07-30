@@ -1,8 +1,8 @@
 import {
-  BadRequestException,
   CanActivate,
   ExecutionContext,
   Injectable,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { parse } from 'cookie';
 import { Request } from 'express';
@@ -23,7 +23,7 @@ export class UserLogged implements CanActivate {
       .getRequest<Request & { user: User }>();
     const cookieObj = parse(request.headers.cookie || '');
     const { authorization } = cookieObj;
-
+    if (!authorization) throw new UnauthorizedException();
     const { id } = this.jwtService.verify(authorization) as { id: string };
     const user = await this.database.user.findUnique({
       where: {
@@ -31,8 +31,9 @@ export class UserLogged implements CanActivate {
       },
     });
 
-    if (!user) throw new BadRequestException();
+    console.log({ user });
 
+    if (!user) throw new UnauthorizedException();
     request.user = new User(user);
     return true;
   }
